@@ -65,7 +65,7 @@ class Figure1:
 
     def gen_amine_traces(self, inchi_key, amine_short_name='Me2NH2I'):
         amine_data = self.full_perovskite_data.loc[
-            self.full_perovskite_data['_rxn_organic_inchikey']
+            self.full_perovskite_data['_rxn_organic-inchikey']
             == inchi_key]
 
         success_hull = None
@@ -101,7 +101,7 @@ class Figure1:
                 name='Score {}'.format(i+1),
                 text=["""<b>Inorganic</b>: {:.3f} <br><b>{}</b>: {:.3f}<br><b>Solvent</b>: {:.3f}""".format(
                     row['_rxn_M_inorganic'],
-                    self.chem_dict[row['_rxn_organic_inchikey']],
+                    self.chem_dict[row['_rxn_organic-inchikey']],
                     row['_rxn_M_organic'],
                     row['_rxn_M_acid'])
                     for idx, row in df.iterrows()],
@@ -233,7 +233,7 @@ class Figure1:
             tooltip='Toggle to show/hide state space',
             icon='check'
         )
-        unique_inchis = self.full_perovskite_data['_rxn_organic_inchikey'].unique(
+        unique_inchis = self.full_perovskite_data['_rxn_organic-inchikey'].unique(
         )
 
         self.select_amine = Dropdown(
@@ -284,7 +284,7 @@ class Figure1:
         new_amine_name = state['new']
         new_amine_inchi = self.inchi_dict[new_amine_name]
         amine_data = self.full_perovskite_data[
-            self.full_perovskite_data['_rxn_organic_inchikey'] ==
+            self.full_perovskite_data['_rxn_organic-inchikey'] ==
             new_amine_inchi]
         self.current_amine_inchi = new_amine_inchi
         self.generate_plot(self.current_amine_inchi)
