@@ -403,7 +403,7 @@ class Figure1:
         prefix = '_'.join(name.split('_')[:-1])
         self.selected_plate = prefix
         self.experiment_table.value = '<p>Plate ID:<br> {}</p>'.format(
-            prefix) + self.generate_table(selected_experiment.loc[columns],
+            prefix) + self.generate_table(selected_experiment.reindex(columns),
                                           columns, column_names)
 
     @property
