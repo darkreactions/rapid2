@@ -14,6 +14,17 @@ class Figure1:
     def __init__(self, csv_file_path, base_path='.',
                  inchi_key='XFYICZOIWSBQSK-UHFFFAOYSA-N',
                  clustering=None):
+        self.organic_inchi_col = '_raw_organic_0_inchikey'
+        self.org_conc_col = '_rxn_molarity_organic'
+        self.inorg_conc_col = '_rxn_molarity_inorganic'
+        self.acid_conc_col = '_rxn_molarity_acid'
+        self.exp_name_col = 'name'
+
+        self.table_cols = ['_rxn_mixingtime_s', '_rxn_mixingtime2_s'
+                           '_rxn_reactiontime_s', '_rxn_stirrate_rpm']
+        self.table_col_names = ['Mixing Time Stage 1 (s)', 'Mixing Time Stage 2 (s)',
+                                'Reaction Time (s)', 'Reaction Stirrate (rpm)']
+
         self.current_amine_inchi = inchi_key
         self.base_path = base_path
         self.clustering = clustering
@@ -27,6 +38,7 @@ class Figure1:
         #self.state_spaces = pd.read_csv('./perovskitedata/state_spaces.csv')
         self.ss_dict = json.load(open('./data/s_spaces.json', 'r'))
         self.generate_plot(self.current_amine_inchi)
+
         self.setup_widgets()
 
     def generate_plot(self, inchi_key):
@@ -65,7 +77,7 @@ class Figure1:
 
     def gen_amine_traces(self, inchi_key, amine_short_name='Me2NH2I'):
         amine_data = self.full_perovskite_data.loc[
-            self.full_perovskite_data['_rxn_organic-inchikey']
+            self.full_perovskite_data[self.organic_inchi_col]
             == inchi_key]
 
         success_hull = None
@@ -76,9 +88,9 @@ class Figure1:
             xp, yp, zp = zip(*self.ss_dict[inchi_key])
         else:
             xp, yp, zp = [0], [0], [0]
-        self.max_inorg = max([amine_data['_rxn_M_inorganic'].max(), max(xp)])
-        self.max_org = max([amine_data['_rxn_M_organic'].max(), max(yp)])
-        self.max_acid = max([amine_data['_rxn_M_acid'].max(), max(zp)])
+        self.max_inorg = max([amine_data[self.inorg_conc_col].max(), max(xp)])
+        self.max_org = max([amine_data[self.org_conc_col].max(), max(yp)])
+        self.max_acid = max([amine_data[self.acid_conc_col].max(), max(zp)])
 
         # Splitting by crystal scores. Assuming crystal scores from 1-4
         self.amine_crystal_dfs = []
@@ -94,16 +106,16 @@ class Figure1:
 
         for i, df in enumerate(self.amine_crystal_dfs):
             trace = go.Scatter3d(
-                x=df['_rxn_M_inorganic'],
-                y=df['_rxn_M_organic'],
-                z=df['_rxn_M_acid'],
+                x=df[self.inorg_conc_col],
+                y=df[self.org_conc_col],
+                z=df[self.acid_conc_col],
                 mode='markers',
                 name='Score {}'.format(i+1),
                 text=["""<b>Inorganic</b>: {:.3f} <br><b>{}</b>: {:.3f}<br><b>Solvent</b>: {:.3f}""".format(
-                    row['_rxn_M_inorganic'],
-                    self.chem_dict[row['_rxn_organic-inchikey']],
-                    row['_rxn_M_organic'],
-                    row['_rxn_M_acid'])
+                    row[self.inorg_conc_col],
+                    self.chem_dict[row[self.organic_inchi_col]],
+                    row[self.org_conc_col],
+                    row[self.acid_conc_col])
                     for idx, row in df.iterrows()],
                 hoverinfo='text',
                 marker=dict(
@@ -117,9 +129,9 @@ class Figure1:
             )
             self.amine_crystal_traces.append(trace)
             if i == 3:
-                success_points = np.dstack((df['_rxn_M_inorganic'],
-                                            df['_rxn_M_organic'],
-                                            df['_rxn_M_acid']))[0]
+                success_points = np.dstack((df[self.inorg_conc_col],
+                                            df[self.org_conc_col],
+                                            df[self.acid_conc_col]))[0]
 
                 if len(success_points) > 3:
                     success_hull = ConvexHull(success_points)
@@ -233,7 +245,7 @@ class Figure1:
             tooltip='Toggle to show/hide state space',
             icon='check'
         )
-        unique_inchis = self.full_perovskite_data['_rxn_organic-inchikey'].unique(
+        unique_inchis = self.full_perovskite_data[self.organic_inchi_col].unique(
         )
 
         self.select_amine = Dropdown(
@@ -284,7 +296,7 @@ class Figure1:
         new_amine_name = state['new']
         new_amine_inchi = self.inchi_dict[new_amine_name]
         amine_data = self.full_perovskite_data[
-            self.full_perovskite_data['_rxn_organic-inchikey'] ==
+            self.full_perovskite_data[self.organic_inchi_col] ==
             new_amine_inchi]
         self.current_amine_inchi = new_amine_inchi
         self.generate_plot(self.current_amine_inchi)
@@ -369,7 +381,7 @@ class Figure1:
             self.populate_data(selected_experiment)
 
     def populate_data(self, selected_experiment):
-        name = selected_experiment['RunID_vial']
+        name = selected_experiment[self.exp_name_col]
         img_filename = name+'_side.jpg'
         image_folder = os.path.join('data', 'images')
         if img_filename in self.image_list:
@@ -382,21 +394,16 @@ class Figure1:
                 b = f.read()
                 self.image_widget.value = b
             #self.image_widget.value = self.image_data['not_found.png']
-        columns = ['RunID_vial', '_rxn_M_acid', '_rxn_M_inorganic', '_rxn_M_organic',
-                   '_rxn_mixingtime1S', '_rxn_mixingtime2S',
-                   '_rxn_reactiontimeS', '_rxn_stirrateRPM',
-                   '_rxn_temperatureC_actual_bulk']
+        columns = [self.exp_name_col, self.acid_conc_col,
+                   self.inorg_conc_col, self.org_conc_col] + self.table_cols
+
         column_names = ['Well ID', 'Formic Acid [FAH]', 'Lead Iodide [PbI2]',
-                        #'Dimethylammonium Iodide [Me2NH2I]',
-                        '{}'.format(self.chem_dict[self.current_amine_inchi]),
-                        'Mixing Time Stage 1 (s)', 'Mixing Time Stage 2 (s)',
-                        'Reaction Time (s)', 'Stir Rate (RPM)',
-                        'Temperature (C)']
+                        '{}'.format(self.chem_dict[self.current_amine_inchi])] + self.table_col_names
 
         prefix = '_'.join(name.split('_')[:-1])
         self.selected_plate = prefix
         self.experiment_table.value = '<p>Plate ID:<br> {}</p>'.format(
-            prefix) + self.generate_table(selected_experiment.loc[columns],
+            prefix) + self.generate_table(selected_experiment.reindex(columns),
                                           columns, column_names)
 
     @property
