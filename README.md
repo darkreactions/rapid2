@@ -1,3 +1,5 @@
+Binder to run RAPID2.ipynb: [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/darkreactions/rapid2/HEAD?labpath=RAPID2.ipynb)
+
 Repo that contains RAPID2 data and visualizations
 
 
