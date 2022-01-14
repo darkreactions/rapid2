@@ -1,0 +1,6 @@
+Solvent, ma, ea, "1,3-dap", acet, dmed, dedap, chma, phenea, dabz, aep
+"GBL", "A, success", "C, success", "," , "E, success", "," , "4, success", "F, success", "G, success", ",", ","
+"GBL:DMF", "B, success", ", danger" , "D, warning", "E, success", "1, success", "4, success", ", danger" , ", danger" , "5, success", "8, success"
+"DMF", "B, success", ", danger" , ", danger" , ", danger" , "2, success", ", danger" , ", danger" , ", danger" , "6, success", "8, success"
+"DMF:DMSO", ", danger" , ", danger" ,", danger" , ", danger" , "3, success", ", danger" ,", danger" ,", danger" , "7, success", "8/9, success"
+"DMSO",", danger" ,", danger" ,", danger" ,", danger" , "3, success",", danger" ,", danger" ,", danger" ,", danger" ,", danger" 

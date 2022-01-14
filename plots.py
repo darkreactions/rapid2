@@ -1,174 +1,223 @@
+from pathlib import Path
 import plotly.graph_objs as go
 import pandas as pd
+import numpy as np
 import os
 from ipywidgets import (Tab, SelectMultiple, Accordion, ToggleButton,
-                        VBox, HBox, HTML, Image, Button, Text, Dropdown)
-from ipywidgets import HBox, VBox, Image, Layout, HTML
-import numpy as np
-from scipy.spatial import ConvexHull
-from sklearn.cluster import KMeans, DBSCAN, OPTICS
-import json
+                        VBox, HBox, HTML, Button, Image, Output)
+from ipywidgets import HBox, VBox, Layout, HTML, Dropdown
+from cif_plots import JsMolFigure
+from IPython.display import display
+#from IPython.display import Image
 
+class SolubilityPlot:
+    
+    def __init__(self, csv_path: str) -> None:
+        self.df: pd.DataFrame = pd.read_csv(csv_path)
+    
+    def change_amine(self, change):
+        if change['name'] =='label':
+            self.update_plot(change['new'])
 
-class Figure1:
-    def __init__(self, csv_file_path, base_path='.',
-                 inchi_key='XFYICZOIWSBQSK-UHFFFAOYSA-N',
-                 clustering=None):
-        self.organic_inchi_col = '_raw_organic_0_inchikey'
-        self.org_conc_col = '_rxn_molarity_organic'
-        self.inorg_conc_col = '_rxn_molarity_inorganic'
-        self.acid_conc_col = '_rxn_molarity_acid'
-        self.exp_name_col = 'name'
+    def get_data(self, amine):
+        df = self.df[self.df['Amine']==amine]
+        data = []
+        for i, row in df.sort_values(axis=0, by='Solvent').iterrows():
+            data.append(go.Scatter(x=[row['Max PbI [M]']], 
+                                   y=[row['Max Amine [M]']], 
+                                   name=row['Solvent'],
+                                   mode='markers',
+                                   marker=dict(size=12),
+                                    )
+                        )
+        return data
 
-        self.table_cols = ['_rxn_mixingtime_s', '_rxn_mixingtime2_s'
-                           '_rxn_reactiontime_s', '_rxn_stirrate_rpm']
-        self.table_col_names = ['Mixing Time Stage 1 (s)', 'Mixing Time Stage 2 (s)',
-                                'Reaction Time (s)', 'Reaction Stirrate (rpm)']
+    def update_plot(self, amine):
+        sol_data, conc_data = self.get_data(amine)
+        with self.sol_fig.batch_update():
+            for i, trace in enumerate(sol_data):
+                self.sol_fig.data[i].x = trace.x
+                self.sol_fig.data[i].y = trace.y
 
-        self.current_amine_inchi = inchi_key
-        self.base_path = base_path
-        self.clustering = clustering
-        self.full_perovskite_data = pd.read_csv(
-            csv_file_path, low_memory=False)
-        self.inchis = pd.read_csv('./data/inventory.csv')
-        self.inchi_dict = dict(zip(self.inchis['Chemical Name'],
-                                   self.inchis['InChI Key (ID)']))
-        self.chem_dict = dict(zip(self.inchis['InChI Key (ID)'],
-                                  self.inchis['Chemical Name']))
-        #self.state_spaces = pd.read_csv('./perovskitedata/state_spaces.csv')
-        self.ss_dict = json.load(open('./data/s_spaces.json', 'r'))
-        self.generate_plot(self.current_amine_inchi)
-
-        self.setup_widgets()
-
-    def generate_plot(self, inchi_key):
-        if inchi_key in self.ss_dict:
-            self.setup_hull(hull_points=self.ss_dict[inchi_key])
-        else:
-            self.setup_hull()
-        self.gen_amine_traces(inchi_key)
-        self.setup_plot(yaxis_label=self.chem_dict[inchi_key]+' (M)')
-
-    def setup_hull(self, hull_points=[[0., 0., 0.]]):
-        xp, yp, zp = zip(*hull_points)
-        self.hull_mesh = go.Mesh3d(x=xp,
-                                   y=yp,
-                                   z=zp,
-                                   color='green',
-                                   opacity=0.50,
-                                   alphahull=0)
-
-    def setup_success_hull(self, success_hull, success_points):
-        if success_hull:
-            xp, yp, zp = zip(*success_points[success_hull.vertices])
-            self.success_hull_plot = go.Mesh3d(x=xp,
-                                               y=yp,
-                                               z=zp,
-                                               color='red',
-                                               opacity=0.50,
-                                               alphahull=0)
-        else:
-            self.success_hull_plot = go.Mesh3d(x=[0],
-                                               y=[0],
-                                               z=[0],
-                                               color='red',
-                                               opacity=0.50,
-                                               alphahull=0)
-
-    def gen_amine_traces(self, inchi_key, amine_short_name='Me2NH2I'):
-        amine_data = self.full_perovskite_data.loc[
-            self.full_perovskite_data[self.organic_inchi_col]
-            == inchi_key]
-
-        success_hull = None
-
-        #print(f'Total points: {len(amine_data)}')
-        # print(self.ss_dict.keys())
-        if inchi_key in self.ss_dict:
-            xp, yp, zp = zip(*self.ss_dict[inchi_key])
-        else:
-            xp, yp, zp = [0], [0], [0]
-        self.max_inorg = max([amine_data[self.inorg_conc_col].max(), max(xp)])
-        self.max_org = max([amine_data[self.org_conc_col].max(), max(yp)])
-        self.max_acid = max([amine_data[self.acid_conc_col].max(), max(zp)])
-
-        # Splitting by crystal scores. Assuming crystal scores from 1-4
-        self.amine_crystal_dfs = []
-        for i in range(1, 5):
-            self.amine_crystal_dfs.append(
-                amine_data.loc[amine_data['_out_crystalscore'] == i])
-        # print(len(self.amine_crystal_dfs[3]))
-        self.amine_crystal_traces = []
-        self.trace_colors = ['rgba(65, 118, 244, 1.0)',
-                             'rgba(92, 244, 65, 1.0)',
-                             'rgba(244, 238, 66, 1.0)',
-                             'rgba(244, 66, 66, 1.0)']
-
-        for i, df in enumerate(self.amine_crystal_dfs):
-            trace = go.Scatter3d(
-                x=df[self.inorg_conc_col],
-                y=df[self.org_conc_col],
-                z=df[self.acid_conc_col],
-                mode='markers',
-                name='Score {}'.format(i+1),
-                text=["""<b>Inorganic</b>: {:.3f} <br><b>{}</b>: {:.3f}<br><b>Solvent</b>: {:.3f}""".format(
-                    row[self.inorg_conc_col],
-                    self.chem_dict[row[self.organic_inchi_col]],
-                    row[self.org_conc_col],
-                    row[self.acid_conc_col])
-                    for idx, row in df.iterrows()],
-                hoverinfo='text',
-                marker=dict(
-                    size=4,
-                    color=self.trace_colors[i],
-                    line=dict(
-                        width=0.2
-                    ),
-                    opacity=1.0
-                )
+        
+    def plot(self):
+        amines = self.df['Amine'].unique()
+        traces = self.get_data(amines[0])
+        options = [(amine, i) for i, amine in enumerate(amines)]
+        self.dropdown_amines = Dropdown(options=options, value=0, description='Amine: ')
+        self.dropdown_amines.observe(self.change_amine)
+        self.sol_fig = go.FigureWidget(data=traces)
+        self.sol_fig.update_layout(
+                title="Solubility Plot",
+                xaxis_title="Max PbI [M]",
+                yaxis_title="Max Amine [M]",
+                legend_title="Solvents",
+                font=dict(size=18)
             )
-            self.amine_crystal_traces.append(trace)
-            if i == 3:
-                success_points = np.dstack((df[self.inorg_conc_col],
-                                            df[self.org_conc_col],
-                                            df[self.acid_conc_col]))[0]
+        return VBox([self.dropdown_amines, self.sol_fig])
+        
+class ReactionOutcomeWidget:
 
-                if len(success_points) > 3:
-                    success_hull = ConvexHull(success_points)
-                else:
-                    success_hull = None
+    def __init__(self, reaction_outcome_path: str):
+        self.df = pd.read_csv(reaction_outcome_path,  error_bad_lines=False, skipinitialspace=True)
+        self.df.fillna('', inplace=True)
+        self.reaction_summary = pd.read_csv('./data/reaction_summary.csv')
+        
+    def get_data(self, rxn_id, ):
+        #diffusion_heights_folder = Path('./data/Diffusion_rate_and_crystal_height_all_CSV')
+        #filename = list(diffusion_heights_folder.glob(f'get_liquid_height_and_crystal_start_{rxn_id}*.*'))
+        csv_folder = Path('./data/csv_for_notebook')
+        solvent_ht_filepath = csv_folder / f'{rxn_id}_solvent_height.csv'
+        conc_filepath = csv_folder / f'{rxn_id}_concentrations.csv' 
 
-                self.setup_success_hull(success_hull, success_points)
+        sol_data = []
+        conc_data = []
+        max_sol = 0
+        max_conc = 0
+        if solvent_ht_filepath.exists():
+            #filename = filename[0]
+            sol_df = pd.read_csv(solvent_ht_filepath)
+            conc_df = pd.read_csv(conc_filepath)
+            antisol = sol_df['AS Height Experimental (cm)']
+            solvent = sol_df['Solvent Height Experimental (cm)']
+            sol_data = [go.Scatter(x=sol_df['Time for Height Build Up (hours)'],
+                            y=solvent, name='ML', mode='markers+lines',),
+                        go.Scatter(x=sol_df['Time for Height Build Up (hours)'], 
+                            y=antisol, name='AS', mode='markers+lines'),
+                        ]
+            max_sol = np.max(np.concatenate([solvent, antisol]))
+            conc_data = [go.Scatter(x=conc_df['Time for Concentration (hours)'], y=conc_df['Solvent [M]'], name='S', mode='markers+lines'),
+                       go.Scatter(x=conc_df['Time for Concentration (hours)'], y=conc_df['DCM [M]'], name='AS', mode='markers+lines'),]
+            max_conc = np.max(np.concatenate([conc_df['Solvent [M]'], conc_df['DCM [M]']]))
+            protonation_time = sol_df.iloc[0]['Crystallization Time (hours)']
 
-        self.data = self.amine_crystal_traces
+        else:
+            print(f'Missing file for {rxn_id}')
+        return sol_data, conc_data, max_sol, max_conc, protonation_time
+    
+    def update_fig(self, rxn_id, ):
+        sol_data, conc_data, max_sol, max_conc, protonation_time = self.get_data(rxn_id, )
+        with self.sol_fig.batch_update():
+            for i, trace in enumerate(sol_data):
+                self.sol_fig.data[i].x = trace.x
+                self.sol_fig.data[i].y = trace.y
+        self.sol_fig.update_shapes({'x0':protonation_time, 'y0':0, 'x1':protonation_time, 'y1':max_sol,}) 
+        with self.conc_fig.batch_update():
+            for i, trace in enumerate(conc_data):
+                self.conc_fig.data[i].x = trace.x
+                self.conc_fig.data[i].y = trace.y
 
-        self.data += [self.success_hull_plot]
-        self.data += [self.hull_mesh]
+        self.conc_fig.update_shapes({'x0':protonation_time, 'y0':0, 'x1':protonation_time, 'y1':max_conc,})
+        base_image_path = Path(f'./data/visible_nucleation_images/{rxn_id}.png')
+        if base_image_path.exists():
+            with base_image_path.open('rb') as f:
+                image = f.read()
+                #self.nuc_image = Image(value=image, format='png', width=600, height=400) 
+                self.nuc_image.value = image
+            
 
-        # if self.hull_mesh:
+    def render_figs(self, rxn_id):
+        sol_data, conc_data, max_sol, max_conc, protonation_time = self.get_data(rxn_id)
+        layout = go.Layout(title='Test')
+        self.sol_fig = go.FigureWidget(data=sol_data, layout=layout)
+        self.sol_fig.update_layout(
+                title="Solubility Plot",
+                xaxis_title="Time (hours)",
+                yaxis_title="Meniscus height (cm)",
+                #legend_title="Solvents",
+                font=dict(size=18),
+                width=900,
+            height=700,
+            )
+        self.sol_fig.add_shape(type="line",
+                    x0=protonation_time, y0=0, x1=protonation_time, y1=max_sol,
+                    line=dict(color="RoyalBlue",width=3)
+                )
+        self.conc_fig = go.FigureWidget(data=conc_data)
+        self.conc_fig.update_layout(
+            title="Concentration Plot",
+            xaxis_title = "Time (hrs)",
+            yaxis_title='Concentration [M]',
+            font=dict(size=18),
+            width=900,
+            height=700,
+        )
+        self.conc_fig.add_shape(type="line",
+                    x0=protonation_time, y0=0, x1=protonation_time, y1=max_conc,
+                    line=dict(color="RoyalBlue",width=3)
+                )
+        with open("./data/visible_nucleation_images/MA_338_2.png", "rb") as f:
+            image = f.read()
+            self.nuc_image = Image(value=image, format='png', width=600, height=400)
+        
+        self.out = Output(layout={'border': '1px solid black'})
+        self.jsmol = JsMolFigure(['./data/cifs/ajn19-019.cif'], ['./data/cifs/ajn19-019.cif'], {}, widget_side=600)
 
-    def setup_plot(self, xaxis_label='Lead Iodide [PbI3] (M)',
-                   yaxis_label='Dimethylammonium Iodide<br>[Me2NH2I] (M)',
-                   zaxis_label='Formic Acid [FAH] (M)'):
+        with self.out:
+            display(self.jsmol.plot)
+
+    def render_plot(self):
+        self.button_grid = self.generate_button_grid()
+        self.render_figs('MA_354_1')
+        return VBox([self.button_grid, HBox([self.sol_fig, self.nuc_image]), HBox([self.conc_fig, self.out])])
+
+    def on_button_clicked(self, b):
+        #print(f"Button clicked. {b.amine} {b.solvent}")
+        rxn_id = self.reaction_summary[(self.reaction_summary['Amine']==b.amine)
+                            & (self.reaction_summary['Solvent']==b.solvent)]['Rxn_ID']
+        if not rxn_id.empty:
+            rxn_id = rxn_id.iloc[0]
+            self.sol_fig.update_layout(title=f"Solubility Plot for {b.amine} {b.solvent}",)
+            self.update_fig(rxn_id,)
+
+    def generate_button_grid(self):
+        hbox_list = []
+        for col in self.df.columns:
+            vbox = [HTML(f'<b>{col}</b>')]
+            for i, row in enumerate(self.df[col]):
+                description = ''
+                button_style = ''
+                if row:
+                    if len(row.split(',')) == 1:
+                        element = HTML(f'<b>{row}</b>')
+                    elif len(row.split(',')) == 2:
+                            description, button_style = row.split(',')
+                            element = Button(
+                                        description=description,
+                                        disabled=False,
+                                        button_style=button_style.strip(), 
+                                        layout=Layout(width='50px'), 
+                                    )
+                            element.on_click(self.on_button_clicked)
+                            element.amine = col
+                            element.solvent = self.df['Solvent'].iloc[i]
+                vbox.append(element)
+            hbox_list.append(VBox(vbox, layout=Layout(border='1px solid')))
+        return HBox(hbox_list)
+                
+
+
+"""
+traces = []
         self.layout = go.Layout(
             scene=dict(
                 xaxis=dict(
-                    title=xaxis_label,
+                    title='Solvent',
                     tickmode='linear',
                     dtick=0.5,
-                    range=[0, self.max_inorg],
+                    #range=[0, self.max_inorg],
                 ),
                 yaxis=dict(
-                    title=yaxis_label,
+                    title='Max Amine [M]',
                     tickmode='linear',
                     dtick=0.5,
-                    range=[0, self.max_org],
+                    #range=[0, self.max_org],
                 ),
                 zaxis=dict(
-                    title=zaxis_label,
+                    title='Max PbI [M]',
                     tickmode='linear',
                     dtick=1.0,
-                    range=[0, self.max_acid],
+                    #range=[0, self.max_acid],
                 ),
             ),
             legend=go.layout.Legend(
@@ -187,225 +236,39 @@ class Figure1:
             width=975,
             height=700,
             margin=go.layout.Margin(
-                l=20,
-                r=20,
-                b=20,
-                t=20,
-                pad=2
+                l=10,
+                r=10,
+                b=10,
+                t=10,
+                pad=1
             ),
         )
-
-        try:
-            with self.fig.batch_update():
-                for i, trace in enumerate(self.data):
-                    self.fig.data[i].x = trace.x
-                    self.fig.data[i].y = trace.y
-                    self.fig.data[i].z = trace.z
-                    self.fig.data[i].text = trace.text
-
-                self.fig.layout.update(self.layout)
-        except:
-            self.fig = go.FigureWidget(data=self.data, layout=self.layout)
-            for trace in self.fig.data[:-2]:
-                trace.on_click(self.show_data_3d_callback)
-
-    def setup_widgets(self, image_folder='data/images'):
-        image_folder = self.base_path + '/' + image_folder
-        #self.image_list = os.listdir(image_folder)
-        self.image_list = json.load(open('./data/image_list.json', 'r'))
-        self.image_list = self.image_list['image_list']
-        # Data Filter Setup
-        reset_plot = Button(
-            description='Reset',
-            disabled=False,
-            tooltip='Reset the colors of the plot'
-        )
-
-        xy_check = Button(
-            description='Show X-Y axes',
-            disabled=False,
-            button_style='',
-            tooltip='Click to show X-Y axes'
-        )
-
-        show_success_hull = ToggleButton(
-            value=True,
-            description='Show success hull',
-            disabled=False,
-            button_style='',
-            tooltip='Toggle to show/hide success hull',
-            icon='check'
-        )
-
-        show_hull_check = ToggleButton(
-            value=True,
-            description='Show State Space',
-            disabled=False,
-            button_style='',
-            tooltip='Toggle to show/hide state space',
-            icon='check'
-        )
-        unique_inchis = self.full_perovskite_data[self.organic_inchi_col].unique(
-        )
-
-        self.select_amine = Dropdown(
-            options=[row['Chemical Name'] for
-                     i, row in self.inchis.iterrows()
-                     if row['InChI Key (ID)'] in unique_inchis],
-            description='Amine:',
-            disabled=False,
-        )
-
-        reset_plot.on_click(self.reset_plot_callback)
-        xy_check.on_click(self.set_xy_camera)
-        show_success_hull.observe(self.toggle_success_mesh, 'value')
-        show_hull_check.observe(self.toggle_mesh, 'value')
-        self.select_amine.observe(self.select_amine_callback, 'value')
-
-        # Experiment data tab setup
-        self.experiment_table = HTML()
-        self.experiment_table.value = "Please click on a point"
-        "to explore experiment details"
-
-        #self.image_data = {}
-
-        with open("{}/{}".format(image_folder, 'not_found.png'), "rb") as f:
-            b = f.read()
-            image_data = b
-
-        self.image_widget = Image(
-            value=image_data,
-            layout=Layout(height='400px', width='650px')
-        )
-
-        experiment_view_vbox = VBox(
-            [HBox([self.experiment_table, self.image_widget])])
-
-        plot_tabs = Tab([VBox([self.fig,
-                               HBox([self.select_amine]),
-                               HBox([xy_check, show_success_hull,
-                                     show_hull_check,
-                                     reset_plot])]),
-                         ])
-        plot_tabs.set_title(0, 'Chemical Space')
-
-        self.full_widget = VBox([plot_tabs, experiment_view_vbox])
-        self.full_widget.layout.align_items = 'center'
-
-    def select_amine_callback(self, state):
-        new_amine_name = state['new']
-        new_amine_inchi = self.inchi_dict[new_amine_name]
-        amine_data = self.full_perovskite_data[
-            self.full_perovskite_data[self.organic_inchi_col] ==
-            new_amine_inchi]
-        self.current_amine_inchi = new_amine_inchi
-        self.generate_plot(self.current_amine_inchi)
-        self.reset_plot_callback(None)
-
-    def get_plate_options(self):
-        plates = set()
-        for df in self.amine_crystal_dfs:
-            for i, row in df.iterrows():
-                name = str(row['name'])
-                plate_name = '_'.join(name.split('_')[: -1])
-                plates.add(plate_name)
-        plate_options = []
-        for i, plate in enumerate(plates):
-            plate_options.append(plate)
-        return plate_options
-
-    def generate_table(self, row, columns, column_names):
-        table_html = """ <table border="1" style="width:100%;">
-                        <tbody>"""
-        for i, column in enumerate(columns):
-            if isinstance(row[column], str):
-                value = row[column].split('_')[-1]
-            else:
-                value = np.round(row[column], decimals=3)
-            table_html += """
-                            <tr>
-                                <td style="padding: 8px;">{}</td>
-                                <td style="padding: 8px;">{}</td>
-                            </tr>
-                          """.format(column_names[i], value)
-        table_html += """
-                        </tbody>
-                        </table>
-                        """
-        return table_html
-
-    def toggle_mesh(self, state):
-        with self.fig.batch_update():
-            self.fig.data[-1].visible = state.new
-
-    def toggle_success_mesh(self, state):
-        with self.fig.batch_update():
-            self.fig.data[-2].visible = state.new
-
-    def set_xy_camera(self, state):
-        camera = dict(
-            up=dict(x=0, y=0, z=1),
-            center=dict(x=0, y=0, z=0),
-            eye=dict(x=0.0, y=0.0, z=2.5)
-        )
-
-        self.fig['layout'].update(
-            scene=dict(camera=camera),
-        )
-
-    def reset_plot_callback(self, b):
-        with self.fig.batch_update():
-            for i in range(len(self.fig.data[:4])):
-                self.fig.data[i].marker.color = self.trace_colors[i]
-                self.fig.data[i].marker.size = 4
-
-    def show_data_3d_callback(self, trace, point, selector):
-        if point.point_inds and point.trace_index < 4:
-
-            selected_experiment = self.amine_crystal_dfs[
-                point.trace_index].iloc[point.point_inds[0]]
-            with self.fig.batch_update():
-                for i in range(len(self.fig.data[: 4])):
-                    color = self.trace_colors[i].split(',')
-                    color[-1] = '0.5)'
-                    color = ','.join(color)
-                    if i == point.trace_index:
-                        marker_colors = [color for x in range(len(trace['x']))]
-                        marker_colors[point.point_inds[0]
-                                      ] = self.trace_colors[i]
-                        self.fig.data[i].marker.color = marker_colors
-                        self.fig.data[i].marker.size = 6
-                    else:
-                        self.fig.data[i].marker.color = color
-                        self.fig.data[i].marker.size = 4
-            self.populate_data(selected_experiment)
-
-    def populate_data(self, selected_experiment):
-        name = selected_experiment[self.exp_name_col]
-        img_filename = name+'_side.jpg'
-        image_folder = os.path.join('data', 'images')
-        if img_filename in self.image_list:
-            with open(os.path.join(image_folder, img_filename), "rb") as f:
-                b = f.read()
-                #self.image_data[img_filename] = b
-                self.image_widget.value = b
-        else:
-            with open(os.path.join(image_folder, 'not_found.png'), "rb") as f:
-                b = f.read()
-                self.image_widget.value = b
-            #self.image_widget.value = self.image_data['not_found.png']
-        columns = [self.exp_name_col, self.acid_conc_col,
-                   self.inorg_conc_col, self.org_conc_col] + self.table_cols
-
-        column_names = ['Well ID', 'Formic Acid [FAH]', 'Lead Iodide [PbI2]',
-                        '{}'.format(self.chem_dict[self.current_amine_inchi])] + self.table_col_names
-
-        prefix = '_'.join(name.split('_')[:-1])
-        self.selected_plate = prefix
-        self.experiment_table.value = '<p>Plate ID:<br> {}</p>'.format(
-            prefix) + self.generate_table(selected_experiment.reindex(columns),
-                                          columns, column_names)
-
-    @property
-    def plot(self):
-        return self.full_widget
+        for amine in amines:
+            filtered_df = self.df[self.df['Amine']==amine]
+            solvent = filtered_df['Solvent']
+            max_amine = filtered_df['Max Amine [M]']
+            max_pbi = filtered_df['Max PbI [M]']
+            trace = go.Scatter3d(
+                    x=solvent,
+                    y=max_amine,
+                    z=max_pbi,
+                    mode='markers',
+                    name=f'{amine}',
+                    text=[f"<b>Amine</b>: {row['Amine']}"
+                          f"<br><b>Solvent</b>: {row['Solvent']}," 
+                          f"<br><b>Max Amine [M]</b>: {row['Max Amine [M]']},"
+                          f"<br><b>Max PbI [M]</b>: {row['Max PbI [M]']}"
+                        for i, row in filtered_df.iterrows()
+                        ],
+                    hoverinfo='text',
+                    marker=dict(
+                        size=4,
+                        #color=self.trace_colors[i],
+                        line=dict(
+                            width=0.2
+                        ),
+                        opacity=1.0
+                    )
+                )
+            traces.append(trace)
+"""

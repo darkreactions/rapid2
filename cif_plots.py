@@ -41,7 +41,6 @@ class JsMolFigure:
         jmol_html = ''
         jmol_script = ''
         for i, cif_path in enumerate(cif_paths):
-
             jmol_script += """
                     <!-- CSS Style Inline: -->
                     <style type="text/css">
@@ -117,6 +116,11 @@ class JsMolFigure:
     def plot(self):
         from IPython.display import HTML
         # from ipywidgets import HTML
+        return HTML(self.html)
+    
+    @property
+    def plot_widget(self):
+        from ipywidgets import HTML
         return HTML(self.html)
 
     @property
