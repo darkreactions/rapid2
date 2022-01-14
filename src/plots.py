@@ -6,7 +6,7 @@ import os
 from ipywidgets import (Tab, SelectMultiple, Accordion, ToggleButton,
                         VBox, HBox, HTML, Button, Image, Output)
 from ipywidgets import HBox, VBox, Layout, HTML, Dropdown
-from cif_plots import JsMolFigure
+from src.cif_plots import JsMolFigure
 from IPython.display import display
 #from IPython.display import Image
 
@@ -33,7 +33,7 @@ class SolubilityPlot:
         return data
 
     def update_plot(self, amine):
-        sol_data, conc_data = self.get_data(amine)
+        sol_data = self.get_data(amine)
         with self.sol_fig.batch_update():
             for i, trace in enumerate(sol_data):
                 self.sol_fig.data[i].x = trace.x
@@ -52,7 +52,9 @@ class SolubilityPlot:
                 xaxis_title="Max PbI [M]",
                 yaxis_title="Max Amine [M]",
                 legend_title="Solvents",
-                font=dict(size=18)
+                font=dict(size=18),
+                width=1000,
+                height=600,
             )
         return VBox([self.dropdown_amines, self.sol_fig])
         
@@ -150,16 +152,22 @@ class ReactionOutcomeWidget:
             image = f.read()
             self.nuc_image = Image(value=image, format='png', width=600, height=400)
         
-        self.out = Output(layout={'border': '1px solid black'})
-        self.jsmol = JsMolFigure(['./data/cifs/ajn19-019.cif'], ['./data/cifs/ajn19-019.cif'], {}, widget_side=600)
+        #self.out = Output(layout={'border': '1px solid black'})
+        #self.jsmol = JsMolFigure(['./data/cifs/ajn19-019.cif'], ['./data/cifs/ajn19-019.cif'], {}, widget_side=600)
 
-        with self.out:
-            display(self.jsmol.plot)
+        #with self.out:
+        #    display(self.jsmol.plot)
 
     def render_plot(self):
         self.button_grid = self.generate_button_grid()
         self.render_figs('MA_354_1')
-        return VBox([self.button_grid, HBox([self.sol_fig, self.nuc_image]), HBox([self.conc_fig, self.out])])
+        #return VBox([self.button_grid, HBox([self.sol_fig, self.conc_fig,]), HBox([self.nuc_image])])
+        self.items = [self.sol_fig, self.conc_fig, self.nuc_image] 
+        self.tab = Tab()
+        self.tab.children = self.items
+        self.tab._titles = {0:'Solubility Plot', 1:'Concentration Plot', 2:'First visible nucleation'}
+        #self.tab.
+        return VBox([self.button_grid, self.tab]) 
 
     def on_button_clicked(self, b):
         #print(f"Button clicked. {b.amine} {b.solvent}")
