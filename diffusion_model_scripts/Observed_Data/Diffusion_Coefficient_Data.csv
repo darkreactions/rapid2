@@ -1,0 +1,45 @@
+﻿Rxn. Type,Solvent 1,"Solvent 1 
+vol (mL)",Solvent 2,"Solvent 2 
+vol (mL)","L1
+-Distance from 
+cuvette to screen 
+(cm)","ẟ
+Width of cuvette 
+(cm)","n1 
+(Initial refractive
+index_Sol.1)","n2 
+(Initial refractive
+index_Sol.2)",Temperature,"Reference 
+Diffusion coefficient (D) m2/s
+from literature","Experimental 
+Diffusion coefficient (D) m2/s 
+(using linear regression)","Experimental 
+Diffusion coefficient (D) m2/s 
+(using formula)"
+DCM_DMSO_a,DCM,2,DMSO,2,50,1.2,1.4244,1.4783,,,1.04E-09,1.22E-09
+DCM_DMSO_b,DCM,2,DMSO,2,50,1.2,1.4244,1.4783,,,1.25E-09,1.53E-09
+DCM_DMSO_c,DCM,2,DMSO,2,50,1.2,1.4244,1.4783,,,1.43E-09,1.72E-09
+DCM_GBL_a,DCM,2,GBL,2,50,1.2,1.4244,1.4348,,,1.24E-09,1.45E-09
+DCM_GBL_b,DCM,2,GBL,2,50,1.2,1.4244,1.4348,,,1.04E-09,1.07E-09
+DCM_GBL_d,DCM,2,GBL,2,50,1.2,1.4244,1.4348,,,1.16E-09,1.47E-09
+DCM_DMF_a,DCM,2,DMF,2,50,1.2,1.4244,1.4305,,,1.18E-09,1.49E-09
+DCM_DMF_b,DCM,2,DMF,2,50,1.2,1.4244,1.4305,,,1.64E-09,1.95E-09
+DCM_DMF_c,DCM,2,DMF,2,50,1.2,1.4244,1.4305,,,1.16E-09,2.08E-09
+DCM_DMF:DMSO_a,DCM,2,DMF:DMSO,2,50,1.2,1.4244,1.436,,,2.16E-10,2.42E-10
+DCM_DMF:DMSO_b,DCM,2,DMF:DMSO,2,50,1.2,1.4244,1.436,,,1.63E-10,2.03E-10
+DCM_DMF:DMSO_c,DCM,2,DMF:DMSO,2,50,1.2,1.4244,1.436,,,2.69E-10,3.06E-10
+DCM_GBLDMF_a,DCM,2,GBL:DMF,2,50,1.2,1.4244,1.42075,,,5.41E-11,1.08E-10
+DCM_GBLDMF_b,DCM,2,GBL:DMF,2,50,1.2,1.4244,1.42075,,,8.96E-11,9.95E-11
+DCM_GBLDMF_c,DCM,2,GBL:DMF,2,50,1.2,1.4244,1.42075,,,1.15E-10,1.12E-10
+,,,,,,,,,,,,
+,,,,,,,,,,,,
+,,,,,,,,,,,,
+,,,,,,,,,,,,
+NaCl_DW_test_2M,2M_NaCl,2,DW,2,60,1.2,,,,,,
+NaCl_DW_test_1M,1M_NaCl,2,DW,2,60,1.2,,,,,2.33E-09,2.66E-09
+DCM_GBL,DCM,2,GBL,2,60,1.2,,,,,2.16E-09,2.70E-09
+DCM_DMSO,DCM,2,DMSO,2,60,1.2,,,,,2.15E-09,2.48E-09
+DCM_DMF,DCM,2,DMF,2,60,1.2,,,,,2.09E-09,2.51E-09
+DCM_DMF_DMSO,DCM,2,DMF:DMSO (1:1),2,,1.2,,,,,,
+DCM_DMF_GBL,DCM,2,DMF:GBL (1:1),2,,1.2,,,,,,
+DCM_GBL_c,DCM,2,GBL,2,50,1.2,1.4244,1.4348,,,7.89E-10,9.83E-10
