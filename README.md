@@ -10,17 +10,35 @@
 5. Department of Chemistry, Purdue University, West Lafayette IN 47907, USA
 6. Department of Chemistry, Fordham University, 441 E. Fordham Road, The Bronx, New York, 10458, USA
 
+This repo contains code, data and jupyter notebook related to RAPID_2.
+
 Binder to run RAPID2.ipynb: [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/darkreactions/rapid2/HEAD?labpath=RAPID2.ipynb)
 
-Repo that contains RAPID2 data and visualizations
 
+## Repository contents
+The following sections indicate the folders which contain code and related data
 
-# To do
-- Data comes from WF3 - What is the latest dataset? - Have latest
-- Different statespaces. How to generate? - Ian
-- Which experimental conditions to display? - _rxn_mixingtime2_s _rxn_mixingtime_s	_rxn_reactiontime_s	_rxn_stirrate_rpm and concentrations
-- Both LBL and HC? - Just LBL
-- What are the other axes? (Formic acid and Lead iodide)
+### Jupyter notebooks
 
-# Writing task for Shekar
-Capabilities of visualization? How is it different in terms of communicating data?
+1. RAPID2.ipynb - Notebook containing all visualizations and reaction outcomes
+
+### Raw data
+All raw data files are located in the ```data``` folder
+
+1. Diffusion_rate_and_crystal_height_all_CSV- Contains .csv files of extracted solvent heights and crystal growth time
+2. cifs - Contains the Crystallographic Information Files
+3. images - Contains side vial images of each experiment performed
+4. xrd/xy - Contains xy files for XRD data
+5. 0042.perovskitedata_RAPID.csv - Escalate generated data file including 8 experimental features (with "_rxn_" as header prefix) and 67 chemical features (with "_feat_" as header prefix). The detailed explanations of these features are listed in "Explanation of Features-Descriptors" section in "Perovskite Dataset Description.pdf". This CSV file is used in visualization and machine learning. 
+6. 0042.perovskitedata_RAPID_full.csv - This escalate generated data file contains the same experiments as "0042.perovskitedata_RAPID.csv" but has all 787 features, including additional "_raw_" features describing experiment details (see "Explanation of Features-Descriptors" section in "Perovskite Dataset Description" for the explanations of "_raw_" prefix). The csv file is not used for visualization or machine learning. 
+7. image_list.json - Keeps track of all image files in the image folder
+8. ml_data.pkl - Python pickle file containing ML results
+9. inventory.csv - Chemical inventory data
+10. organic_inchikey.csv - Inchi keys and chemical names
+11. s_spaces.json - Co-ordinates of state space for each amine
+
+### Scripts in src folder
+The following python scripts are used in the RAPID.ipynb notebook to generate visualizations
+
+1. diffusion_coeff - Matlab code for running diffusion model
+2. 
