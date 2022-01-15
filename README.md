@@ -28,21 +28,23 @@ The following sections indicate the folders which contain code and related data
 All raw data files are located in the ```data``` folder
 
 1. Diffusion_rate_and_crystal_height_all_CSV- Contains .csv files of extracted solvent heights and crystal growth time
-2. cifs - Contains the Crystallographic Information Files for running Jupyter notebook
-3. csv_for_notebook - Contains the .csv files for running Jupyter notebook
-4. images - Contains the image files for running Jupyter notebook
-5. visible_nucleation_images - Contains the image files of first apperence of nucleation (used for running Jupyter notebook)
-6. 0058.perovskitedata.wf3.csv - This escalate generated data file contains ALL the 'Anti-solvent vapor diffusion' experiments, includes "_raw_" features describing experiment details. The csv file is not used for visualization or machine learning.
-7. RAPID_2_curated_dataset_SIMPLESOLVENT.csv - This escalate generated curated data file contains selected 'Anti-solvent vapor diffusion' experiments used in this study. The csv file is used for diffusion model and decision tree analysis. Solvent features are not included.
-8. RAPID_2_curated_dataset_SIMPLESOLVENT.arff - Converted data set for using in WEKA software
-9. organic_inchikey.csv - inchikey of chemicals
-10. reaction_outcome.csv - Contains the reaction outcome information for running Jupyter notebook
-11. image_list.json - Keeps track of all image files in the image folder
-12. ml_data.pkl - Python pickle file containing ML results
-13. inventory.csv - Chemical inventory data
-14. organic_inchikey.csv - Inchi keys and chemical names
-15. s_spaces.json - Co-ordinates of state space for each amine
-16. 'csv_for_notebook' folder contains solvent height and concentration data for visualization of plots in Jupyter notebook
+2. Reaction Summary for github.csv - key file for the reaction ID, amine and solvent used
+3. cifs - Contains the Crystallographic Information Files for running Jupyter notebook
+4. csv_for_notebook - Contains the .csv files for running Jupyter notebook
+5. images - Contains the image files for running Jupyter notebook
+6. visible_nucleation_images - Contains the image files of first apperence of nucleation (used for running Jupyter notebook)
+7. 0058.perovskitedata.wf3.csv - This escalate generated data file contains ALL the 'Anti-solvent vapor diffusion' experiments, includes "_raw_" features describing experiment details. The csv file is not used for visualization or machine learning.
+8. RAPID_2_curated_dataset_SIMPLESOLVENT.csv - This escalate generated curated data file contains selected 'Anti-solvent vapor diffusion' experiments used in this study. The csv file is used for diffusion model and decision tree analysis. Solvent features are not included.
+9. RAPID_2_curated_dataset_SIMPLESOLVENT.arff - Converted data set for using in WEKA software
+10. diffusion_top_dataset - data set generated from diffusion modeling. Contains concentration profile data used in decision tree model
+11. organic_inchikey.csv - inchikey of chemicals
+12. reaction_outcome.csv - Contains the reaction outcome information for running Jupyter notebook
+13. image_list.json - Keeps track of all image files in the image folder
+14. ml_data.pkl - Python pickle file containing ML results
+15. inventory.csv - Chemical inventory data
+16. organic_inchikey.csv - Inchi keys and chemical names
+17. s_spaces.json - Co-ordinates of state space for each amine
+18. 'csv_for_notebook' folder contains solvent height and concentration data for visualization of plots in Jupyter notebook
 
 ## Scripts in src folder
 
