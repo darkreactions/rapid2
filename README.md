@@ -104,3 +104,21 @@ diffusion_top_dataset.csv
 
 5. Please add explanations for line (55,56,57) above
 6. Please add folder 'CAD' and add the WF3 Diffusion block_Fillet_v1.step file
+
+## Todo in Jupyter notebook
+
+7. Correct Josh's and Matthias affiliation numbers
+8. Move Solvent Type vs. Antisolvent concentration plot before decision tree
+9. Change 'Max Amine vs. Max PbI' heading to 'Maximum solubility data (in moles/liter, M)
+Text to add with solubility polt 
+Solubility measurements
+Click the dropdown button to visualize Max amine and Pbi values in different solvent systems
+The solubility of lead-ammonium compounds fundamentally depends on the solvent used (GBL, DMF, DMSO, GBL:DMF and DMF:DMSO), the temperature, and the concentration of ammonium iodide in the solution. The maximum lead-amine solubility in each solvent system was determined by adding 0.5 mmol of lead iodide and 0.75 mmol of each respective ammonium iodide salt to 100 µl of solvent in a glass vial, and stirred the suspensions in a heated oil bath at 75 °C and 450 rpm. Additional solvent was added in 100 µl aliquots until all solid was completely dissolved. The solution was then brought to room temperature. Solubility data for both PbI2 and individual ammonium iodide salts in each solvent system are shown in Table S1.  A concentration threshold for PbI2 of 0.25 M was established to ensure adequate reactant concentrations.  Reactions in which this threshold could not be realized were not performed.
+
+10. Add heading 'Reaction outcome' to the table
+11. Add key to the right of the table
+12. Text: Click each box for visualizing the 'solvent height', 'concentration profiles' and 'first visible nucleation' of each reactions
+13. Change 'solubility plot' button under the table to 'solvent height' (also on the plots)
+14. Currently only the S and AS plots are available under the 'concentration plot' button. could you please add the plots for 'organic','inorganic', and 'FAH' concentrations. data will be in the same file Rod shared
+15. CIF not working
+
