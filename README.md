@@ -58,6 +58,9 @@ The following python scripts are used for data generation in this study
 2. plots.py
 3. rapid1_plots.py
 
+## CAD file
+WF3 Diffusion block_Fillet_v1.step - CAD file for the diffusion block
+
 # Todo for SHEKAR
 1. Move 'diff_coeff_analysis.ipynb' from 'diffusion_coeff' folder to 'src'
 2. Remove xrd folder from data
@@ -98,3 +101,4 @@ RAPID_2_curated_dataset_SIMPLESOLVENT.csv
 diffusion_top_dataset.csv
 
 5. Please add explanations for line (55,56,57) above
+6. Please add folder 'CAD' and add the WF3 Diffusion block_Fillet_v1.step file
