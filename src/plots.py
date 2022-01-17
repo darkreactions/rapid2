@@ -183,7 +183,7 @@ class ReactionOutcomeWidget:
         self.tab._titles = {0: 'Solvent Height Plot',
                             1: 'Concentration Plot', 2: 'First visible nucleation'}
 
-        with open('./data/rapid2_TABLE.PNG', "rb") as f:
+        with open('./data/rapid2_table.PNG', "rb") as f:
             image = f.read()
             self.table = Image(value=image, format='png', width=350)
 
