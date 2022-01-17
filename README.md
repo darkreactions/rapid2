@@ -17,6 +17,9 @@ Reaction vial images available upon request.
 ## Click this button [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/darkreactions/rapid2/HEAD?labpath=RAPID2.ipynb) to access the jupyter notebook for visualization of reaction outcomes without downloading/installing
 
 [![Binder](https://notebooks.gesis.org/binder/badge_logo.svg)](https://notebooks.gesis.org/binder/v2/gh/darkreactions/rapid2/HEAD?labpath=RAPID2.ipynb)
+## Abstract
+
+A spatiotemporal experimental route is reported for the antisolvent vapor diffusion crystal growth of metal halide perovskites.  A computational analysis combining automated image capture and diffusion modeling enables the determination of the critical concentrations required for nucleation and crystal growth from a single experiment.  Five different solvent systems and ten distinct organic ammonium iodide salts were investigated with lead iodide, from which nine previously unreported compounds were discovered.  Automated image capture of the mother liquor and antisolvent vials were used to determine changes in solution meniscus positions and detect nucleation event location.  Matching the observations to a numerical solution of Fick’s second law diffusion model enables the calculation of reactant, solvent and antisolvent concentrations at both the time and position of the first stable nucleation and crystal growth.  A machine learning model was trained on the resulting data reveals solvent- and amine-specific crystallization tendencies.  Solvent systems that interact more weakly with dissolved lead species promote crystallization, while those with stronger interaction can prevent crystallization through increased solubilities.  Organic amines that interact more strongly with inorganic components and exhibit greater rigidity are more likely to be incorporated into crystalline products.  
 
 ## Reaction summary table
 
@@ -118,50 +121,14 @@ The following python scripts are used for data generation in this study
 WF3 Diffusion block_Fillet_v1.step - CAD file for the diffusion block
 
 # Todo for SHEKAR
-- [x] Move 'diff_coeff_analysis.ipynb' from 'diffusion_coeff' folder to 'src'
-- [x] Remove xrd folder from data
-- [x] Remove following files from data (if not used anywhere else)
 
-0000.perovskitedata.csv
 
-0052.4-Data-WF3_Iodide.csv
-
-0056.perovskitedata.csv
-
-Final_Results_11_3_20.csv
-
-Reaction Summary - Uniform_Concentration.csv
-
-WF3_Iodides_20191211b.csv
-
-first_pass_decision_tree_rapid2.pdf
-
-only4_diffusion_topcolmn.xlsx
-
-reaction_summary.csv
-
-second_pass_decision_tree_rapid2.pdf
-
-training_set_redone_mansoor.csv
-
-- [x] Add the following files to 'data' folder instead (shared in slack on 01/15/22)
-
-Reaction Summary for github.csv
-
-RAPID_2_curated_dataset_SIMPLESOLVENT.arff
-
-RAPID_2_curated_dataset_SIMPLESOLVENT.csv
-
-0058.perovskitedata.wf3.csv
-
-diffusion_top_dataset.csv
 
 5. Please add explanations for line (55,56,57) above
-- [x] Please add folder 'CAD' and add the WF3 Diffusion block_Fillet_v1.step file
+
 
 ## Todo in Jupyter notebook
 
-- [x] Correct Josh's and Matthias affiliation numbers
 - [x] Move Solvent Type vs. Antisolvent concentration plot before decision tree
 - [x] Change 'Max Amine vs. Max PbI' heading to 'Maximum solubility data (in moles/liter, M)
 - [x] Text to add with solubility plot 
