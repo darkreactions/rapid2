@@ -6,7 +6,7 @@ import os
 from ipywidgets import (Tab, SelectMultiple, Accordion, ToggleButton,
                         VBox, HBox, HTML, Button, Image, Output)
 from ipywidgets import HBox, VBox, Layout, HTML, Dropdown
-from src.cif_plots import JsMolFigure
+#from src.cif_plots import JsMolFigure
 from IPython.display import display
 #from IPython.display import Image
 
