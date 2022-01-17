@@ -16,6 +16,57 @@ Reaction vial images available upon request.
 
 # Click this button [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/darkreactions/rapid2/HEAD?labpath=RAPID2.ipynb) to access the jupyter notebook for visualization of reaction outcomes without downloading/installing: 
 
+## Reaction summary table
+
+| Rxn_ID    | Amine     | Solvent  | Crystal score | 
+|-----------|-----------|----------|---------------| 
+| MA_333_1  | aep       | DMF      | 4             | 
+| MA_333_2  | aep       | DMSO     | 1             | 
+| MA_333_3  | aep       | DMF:DMSO | 4             | 
+| MA_333_4  | aep       | GBL:DMF  | 4             | 
+| MA_336_4  | chma      | GBL      | 4             | 
+| MA_336_5  | chma      | DMF      | 1             | 
+| MA_336_6  | chma      | DMSO     | 1             | 
+| MA_336_7  | chma      | DMF:DMSO | 1             | 
+| MA_336_8  | chma      | GBL:DMF  | 1             | 
+| MA_350_1  | acet      | GBL      | 4             | 
+| MA_350_2  | acet      | DMF      | 1             | 
+| MA_350_3  | acet      | DMSO     | 1             | 
+| MA_350_4  | acet      | DMF:DMSO | 1             | 
+| MA_350_5  | acet      | GBL:DMF  | 4             | 
+| MA_351_1  | ea        | GBL      | 4             | 
+| MA_351_2  | ea        | DMF      | 1             | 
+| MA_351_3  | ea        | DMSO     | 1             | 
+| MA_351_4  | ea        | DMF:DMSO | 1             | 
+| MA_385_2  | ea        | GBL:DMF  | 1             | 
+| MA_354_1  | ma        | GBL      | 4             | 
+| MA_354_2  | ma        | DMF      | 4             | 
+| MA_354_3  | ma        | DMSO     | 1             | 
+| MA_395_1  | ma        | DMF:DMSO | 1             | 
+| MA_354_5  | ma        | GBL:DMF  | 4             | 
+| MA_355_1b | phenea    | GBL      | 4             | 
+| MA_355_2  | phenea    | DMF      | 1             | 
+| MA_394_1  | phenea    | DMSO     | 1             | 
+| MA_394_2  | phenea    | DMF:DMSO | 1             | 
+| MZ_342_1  | phenea    | GBL:DMF  | 1             | 
+| MA_356_2  | "1,3-dap" | DMF      | 1             | 
+| MA_396_1  | "1,3-dap" | DMSO     | 1             | 
+| MA_356_4  | "1,3-dap" | DMF:DMSO | 1             | 
+| MA_356_5  | "1,3-dap" | GBL:DMF  | 4             | 
+| MA_357_2  | dmed      | DMF      | 4             | 
+| MA_380_7  | dmed      | DMSO     | 4             | 
+| MA_397_1  | dmed      | DMF:DMSO | 3             | 
+| MA_357_5  | dmed      | GBL:DMF  | 4             | 
+| MA_338_2  | dedap     | GBL      | 4             | 
+| MZ_341_1  | dedap     | DMF      | 1             | 
+| MA_338_4  | dedap     | DMSO     | 1             | 
+| MZ_341_2  | dedap     | DMF:DMSO | 1             | 
+| MZ_341_3  | dedap     | GBL:DMF  | 4             | 
+| MA_358_2  | dabz      | DMF      | 4             | 
+| MA_334_3  | dabz      | DMSO     | 1             | 
+| MA_358_4  | dabz      | DMF:DMSO | 3             | 
+| MA_358_5  | dabz      | GBL:DMF  | 4             | 
+
 
 ## Repository contents
 The following sections indicate the folders which contain code and related data
@@ -23,6 +74,7 @@ The following sections indicate the folders which contain code and related data
 ### Jupyter notebooks
 
 1. RAPID2.ipynb - Notebook containing all visualizations and reaction outcomes
+
 
 ### Raw data
 All raw data files are located in the ```data``` folder
