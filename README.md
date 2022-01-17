@@ -120,50 +120,14 @@ The following python scripts are used for data generation in this study
 WF3 Diffusion block_Fillet_v1.step - CAD file for the diffusion block
 
 # Todo for SHEKAR
-- [x] Move 'diff_coeff_analysis.ipynb' from 'diffusion_coeff' folder to 'src'
-- [x] Remove xrd folder from data
-- [x] Remove following files from data (if not used anywhere else)
 
-0000.perovskitedata.csv
 
-0052.4-Data-WF3_Iodide.csv
-
-0056.perovskitedata.csv
-
-Final_Results_11_3_20.csv
-
-Reaction Summary - Uniform_Concentration.csv
-
-WF3_Iodides_20191211b.csv
-
-first_pass_decision_tree_rapid2.pdf
-
-only4_diffusion_topcolmn.xlsx
-
-reaction_summary.csv
-
-second_pass_decision_tree_rapid2.pdf
-
-training_set_redone_mansoor.csv
-
-- [x] Add the following files to 'data' folder instead (shared in slack on 01/15/22)
-
-Reaction Summary for github.csv
-
-RAPID_2_curated_dataset_SIMPLESOLVENT.arff
-
-RAPID_2_curated_dataset_SIMPLESOLVENT.csv
-
-0058.perovskitedata.wf3.csv
-
-diffusion_top_dataset.csv
 
 5. Please add explanations for line (55,56,57) above
-- [x] Please add folder 'CAD' and add the WF3 Diffusion block_Fillet_v1.step file
+
 
 ## Todo in Jupyter notebook
 
-- [x] Correct Josh's and Matthias affiliation numbers
 - [x] Move Solvent Type vs. Antisolvent concentration plot before decision tree
 - [x] Change 'Max Amine vs. Max PbI' heading to 'Maximum solubility data (in moles/liter, M)
 - [x] Text to add with solubility plot 
