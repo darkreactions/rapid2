@@ -14,7 +14,7 @@ This repo contains code, data and jupyter notebook related to RAPID_2.
 
 Reaction vial images available upon request.
 
-# Click this button [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/darkreactions/rapid2/HEAD?labpath=RAPID2.ipynb) to access the jupyter notebook for visualization of reaction outcomes without downloading/installing: 
+## Click this button [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/darkreactions/rapid2/HEAD?labpath=RAPID2.ipynb) to access the jupyter notebook for visualization of reaction outcomes without downloading/installing
 
 ## Reaction summary table
 
