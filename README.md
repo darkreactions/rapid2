@@ -16,6 +16,8 @@ Reaction vial images available upon request.
 
 ## Click this button [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/darkreactions/rapid2/HEAD?labpath=RAPID2.ipynb) to access the jupyter notebook for visualization of reaction outcomes without downloading/installing
 
+[![Binder](https://notebooks.gesis.org/binder/badge_logo.svg)](https://notebooks.gesis.org/binder/v2/gh/darkreactions/rapid2/HEAD?labpath=RAPID2.ipynb)
+
 ## Reaction summary table
 
 | Rxn_ID    | Amine     | Solvent  | Crystal score | 
