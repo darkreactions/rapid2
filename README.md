@@ -174,4 +174,4 @@ The solubility of lead-ammonium compounds fundamentally depends on the solvent u
 - [x] Currently only the S and AS plots are available under the 'concentration plot' button. could you please add the plots for 'organic','inorganic', and 'FAH' concentrations. data will be in the same file Rod shared
 15. CIF not working
 
-## In the table reaction dmed-DMF:DMSO and dabz-DMF:DMSO needs to be in blue color
+- [x] In the table reaction dmed-DMF:DMSO and dabz-DMF:DMSO needs to be in blue color
