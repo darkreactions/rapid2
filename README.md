@@ -14,9 +14,11 @@ This repo contains code, data and jupyter notebook related to RAPID_2.
 
 Reaction vial images available upon request.
 
-## Click this button [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/darkreactions/rapid2/HEAD?labpath=RAPID2.ipynb) to access the jupyter notebook for visualization of reaction outcomes without downloading/installing
+### Click this button [![Binder](https://notebooks.gesis.org/binder/badge_logo.svg)](https://notebooks.gesis.org/binder/v2/gh/darkreactions/rapid2/HEAD?filepath=RAPID2.ipynb) to access the jupyter notebook for visualization of reaction outcomes without downloading/installing
 
-[![Binder](https://notebooks.gesis.org/binder/badge_logo.svg)](https://notebooks.gesis.org/binder/v2/gh/darkreactions/rapid2/HEAD?labpath=RAPID2.ipynb)
+Alternate link if previous link does not work: [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/darkreactions/rapid2/HEAD?filepath=RAPID2.ipynb)
+
+
 ## Abstract
 
 A spatiotemporal experimental route is reported for the antisolvent vapor diffusion crystal growth of metal halide perovskites.  A computational analysis combining automated image capture and diffusion modeling enables the determination of the critical concentrations required for nucleation and crystal growth from a single experiment.  Five different solvent systems and ten distinct organic ammonium iodide salts were investigated with lead iodide, from which nine previously unreported compounds were discovered.  Automated image capture of the mother liquor and antisolvent vials were used to determine changes in solution meniscus positions and detect nucleation event location.  Matching the observations to a numerical solution of Fick’s second law diffusion model enables the calculation of reactant, solvent and antisolvent concentrations at both the time and position of the first stable nucleation and crystal growth.  A machine learning model was trained on the resulting data reveals solvent- and amine-specific crystallization tendencies.  Solvent systems that interact more weakly with dissolved lead species promote crystallization, while those with stronger interaction can prevent crystallization through increased solubilities.  Organic amines that interact more strongly with inorganic components and exhibit greater rigidity are more likely to be incorporated into crystalline products.  
